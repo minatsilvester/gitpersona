@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+
+# Follow symlinks to get the actual directory of this script
+SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$SOURCE" ]; do
+  DIR="$(cd -P "$(dirname "$SOURCE")" && pwd)"
+  SOURCE="$(readlink "$SOURCE")"
+  [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
+done
+SCRIPT_DIR="$(cd -P "$(dirname "$SOURCE")" && pwd)"
+
+# Base project directory (one level up from bin/)
+BASE_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+PROFILE_DIR="$BASE_DIR/profiles"
+
+# Source core commands from lib/
+source "$BASE_DIR/lib/add.sh"
+source "$BASE_DIR/lib/switch.sh"
+source "$BASE_DIR/lib/list.sh"
+
+# Help message
+function show_help() {
+  echo "Usage: gitpersona [command]"
+  echo
+  echo "Commands:"
+  echo "  add       Add a new Git profile"
+  echo "  switch    Switch between Git profiles"
+  echo "  list      List all Git profiles"
+  echo "  help      Show this help message"
+}
+
+# Main dispatcher
+case "$1" in
+  add)
+    shift
+    add_profile "$@"
+    ;;
+  switch)
+    shift
+    switch_profile "$@"
+    ;;
+  list)
+    shift
+    list_profiles "$@"
+    ;;
+  help|"")
+    show_help
+    ;;
+  *)
+    echo "❌ Unknown command: $1"
+    show_help
+    exit 1
+    ;;
+esac
