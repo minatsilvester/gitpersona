@@ -46,8 +46,8 @@ gitpersona list
 $ gitpersona add
 
 Profile name: work
-Git name: Minat Silvester
-Git email: minat.silvester@mx.com
+Git name: John Doe
+Git email: john.doe@company.com
 ```
 
 ```
